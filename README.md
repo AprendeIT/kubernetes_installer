@@ -84,7 +84,7 @@ https://docs.projectcalico.org/getting-started/kubernetes/quickstart
    kubectl taint nodes --all node-role.kubernetes.io/master-
    ```
 
-   Esto dee retornar:
+   Esto debe retornar:
 
    ```
    node/<your-hostname> untainted

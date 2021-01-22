@@ -103,3 +103,4 @@ https://docs.projectcalico.org/getting-started/kubernetes/quickstart
    <your-hostname>   Ready    master   52m   v1.12.2   10.128.0.28   <none>        Ubuntu 18.04.1 LTS   4.15.0-1023-gcp   docker://18.6.1
    ```
 
+

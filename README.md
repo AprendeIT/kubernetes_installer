@@ -11,24 +11,40 @@ Descargar el script con git en cada uno de los nodos:
 git clone URL
 ```
 
+Después tenemos dos formas de instalación. Recomendamos la instalación con ***containerd*** ya que se ha declarado obsoleta la instalación con docker.
+
+### Instalación con docker
+
 Ejecutar en cada nodo (***Ubuntu***):
+
 ```
 sh instala_docker_kube.sh
 ```
 
-## Levantando un cluster de K8s con Calico
+### Instalación con containerd
 
-### Documentación official
+Ejecutar en cada nodo (***Ubuntu***):
+
+```
+sh instala_containerd_kube.sh
+```
+
+## Preparando el master
+
+### Levantando un cluster de K8s con Calico
+
+#### Documentación official
 Se puede seguir la guia oficial que se encuentra en: 
 https://docs.projectcalico.org/getting-started/kubernetes/quickstart
 
-### Create a single-host Kubernetes cluster
+#### Create a single-host Kubernetes cluster
 
 1. Lo mejor es seguir la guia de instalación oficial que se encuentra en https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/ o utilizar el script del repositorio
 
    > **Note**: Despues de instalar kueadm **no apagues o reinicies el host, continua directamente con el siguiente paso**.
 
 2. Si estas como usuario normal are una terminal en el host donde has instalado kueadm con sudo.
+
 3. Inicializa el nodo master con el siguiente comando:
 
    ```
@@ -37,7 +53,11 @@ https://docs.projectcalico.org/getting-started/kubernetes/quickstart
 
    > **Nota**: Si ya está en uso la red 192.168.0.0/16 o quieres usar otra, debes selecionar otro direccionamiento para pods replazandolo en el comando anterior.
 
-4. Ejecuta los siguientes comandos para configurar kubectl, son los mismos que devuelve `kubeadm init`.
+   Este comando devolverá un comando ***kubeadm*** que se tiene que ejecutar en los **nodos *minion*** del cluster: 
+   ```
+   kubeadm join XXX.XXX.XXX.XXX:6443 --token 1zotmg.ua015ox6gpxe37je --discovery-token-ca-cert-hash sha256:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+   ```
+4. Ejecuta los siguientes comandos en el **nodo** **master** para configurar kubectl, son los mismos que devuelve `kubeadm init`.
 
    ```
    mkdir -p $HOME/.kube
@@ -45,6 +65,7 @@ https://docs.projectcalico.org/getting-started/kubernetes/quickstart
    sudo chown $(id -u):$(id -g) $HOME/.kube/config
    export KUBECONFIG=/etc/kubernetes/admin.conf
    ```
+
 
 ###  Instalando Calico
 
@@ -71,18 +92,21 @@ https://docs.projectcalico.org/getting-started/kubernetes/quickstart
    watch kubectl get pods -n calico-system
    ```
    >***Nota:*** En algunas instalaciones ha de hacerse con:
-```
+   ```
    watch kubectl get pods -n kube-system
-```
+   ```
+
+   ```
    Hay que esperar hasta que cada pod tenga `STATUS` of `Running`.
+   ```
 
 
 
 4. Elimina los nodos contaminados:
 
-   ```
+```
    kubectl taint nodes --all node-role.kubernetes.io/master-
-   ```
+```
 
    Esto debe retornar:
 
